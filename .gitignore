@@ -1,0 +1,7 @@
+venv
+twitter
+__pycache__
+.ipynb_checkpoints
+tokenize.pyc
+.vscode
+
