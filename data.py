@@ -23,7 +23,7 @@ class Twitter_Data():
             list_frame.append(dframe)
             twitter_data = pd.concat(list_frame, ignore_index=True)
         return twitter_data
-    
+#A function to clean unnecessary information from tweet like # tags, @, url links,  RT
     def clean_tweet(self, tweet):
 
         return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", tweet).split())
@@ -41,7 +41,7 @@ class Twitter_Data():
 
         return joined
 
-###Tweets referencing to Donald Trump
+###A collection of mentions######
 
     def term_mentions(self):
         count_all = Counter()
@@ -54,7 +54,8 @@ class Twitter_Data():
             count_all.update(term_mention)
 
         return count_all
-    
+
+####Accounts tweeting about Donald Trump#####  
     def trump_tweet(self):
         twitter_data = self.get_all()
         tweets = []
@@ -68,18 +69,20 @@ class Twitter_Data():
         trump_tweets = pd.concat(lists, ignore_index=True)
         return trump_tweets
 
+####No. of tweets on Donald Trump including the RT##### 
     def trump_reference(self):
         term_mention = self.term_mentions()
         trump_reference = term_mention['@POTUS'] + term_mention['@realDonaldTrump']
 
         return trump_reference
 
-
+####PErcentage of accounts tweeting about Donald Trump####
     def trump_reference_percentage(self, twitter_data):
         tweets = twitter_data['text']
         trump_tweet = self.trump_reference()
         print('Percentage of accounts tweeting about Trump: {}%'.format(100*(trump_tweet)/len(tweets)))
-    
+
+#####Frequency of accounts tweeting about Donald Trump#####   
     def order_by_frequency(self):
         #accounts referencing trump
         trump_reference = self.trump_tweet()
@@ -87,7 +90,7 @@ class Twitter_Data():
         trump_reference['frequency'] = trump_reference.groupby(by='screen_name')['text'].transform('count')
 
         return trump_reference.sort_values('frequency')
-    
+####A sentiment analysis of tweets about Donald Trump using TextBlob####    
     def positive_tweets(self, tweet):
         analysis = TextBlob(self.clean_tweet(tweet))
         if analysis.sentiment.polarity > 0:
